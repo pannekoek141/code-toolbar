@@ -22,7 +22,11 @@ export function flyFrame(label: string, t: number): string {
   return cells.join('')
 }
 
+// Each instance's latest props: the pointer listener is set once, so it would see stale ones.
+const latest = new WeakMap<object, PillProps>()
+
 const Pill: ClientModule<PillProps, { isHover: boolean; t: number | null }> = (p, s) => {
+  latest.set(s, p)
   if (s.state === undefined) {
     s.setState({ isHover: false, t: null })
     s.onPointer(e => {
@@ -31,7 +35,8 @@ const Pill: ClientModule<PillProps, { isHover: boolean; t: number | null }> = (p
       else if (e.type === 'leave') s.setState({ isHover: false, t })
       else if (e.type === 'up' && e.button === 'left') {
         s.post('press')
-        if (t !== null) return
+        // The click itself turns `fly` off (a handoff starts), so a started flight always finishes.
+        if (t !== null || !latest.get(s)?.fly) return
         let n = 0
         s.setState({ isHover: true, t: 0 })
         const stop = s.every(FRAME_MS, () => {
@@ -46,7 +51,7 @@ const Pill: ClientModule<PillProps, { isHover: boolean; t: number | null }> = (p
   const label = p.parts ? p.parts.map(t => t.text).join('') : p.label
   const hover = p.hoverIcon ? [...Array.from(label ?? '').slice(0, 1), p.hoverIcon, ...Array.from(label ?? '').slice(2)].join('') : (label ?? '')
   const t = s.state?.t ?? null
-  if (p.fly && t !== null) {
+  if (t !== null) {
     return s.elements.Text({ color: 'inverseText', backgroundColor: color, children: flyFrame(hover, t) })
   }
   return s.state?.isHover
