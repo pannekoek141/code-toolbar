@@ -75,16 +75,16 @@
       "description": "Show the model toggle (Opus / Sonnet)",
       "default": true
     },
-    "showHandoff": {
-      "type": "boolean",
-      "title": "Handoff toggle",
-      "description": "Show the one-click handoff button (needs the mattpocock-skills handoff skill)",
-      "default": true
-    },
     "showArtifact": {
       "type": "boolean",
       "title": "Artifact toggle",
       "description": "Show the artifact on/off toggle",
+      "default": true
+    },
+    "ctxHandoff": {
+      "type": "boolean",
+      "title": "Handoff on context click",
+      "description": "Click the context bar to write a handoff note, /clear, and continue fresh (needs the mattpocock-skills handoff skill)",
       "default": true
     }
   }

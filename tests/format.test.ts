@@ -11,7 +11,7 @@ test('formats', () => {
 })
 
 test('context color changes at caution and warn', () => {
-  expect(configFrom({ showArtifact: false, showHandoff: 'false' }).show).toEqual({ effort: true, model: true, handoff: false, artifact: false })
+  expect(configFrom({ showArtifact: false, ctxHandoff: 'false' }).show).toEqual({ effort: true, model: true, handoff: false, artifact: false })
   const c = configFrom({ ctxCaution: 150000, ctxWarn: '170000', ctxBarCells: 999, ctxBar: false })
   expect(c).toEqual({ target: 200000, caution: 150000, warn: 170000, ctxBar: false, ctxCells: 60, taskCells: 18, alerts: true, five: true, week: true, show: { effort: true, model: true, handoff: true, artifact: true } })
   const colors = [10_000, 150_000, 170_000].map(n => colorFor(n, c))

@@ -16,6 +16,6 @@ export type Snap = {
 
 declare module 'claude-code' {
   interface PluginState {
-    'code-toolbar': { snap: Snap | null; effort: Effort; tasks: Record<string, Record<string, string>>; alerted: { ctx: boolean; five: boolean }; more: boolean }
+    'code-toolbar': { snap: Snap | null; effort: Effort; tasks: Record<string, Record<string, string>>; alerted: { ctx: boolean; five: boolean }; more: boolean; handing: boolean }
   }
 }

@@ -3,7 +3,7 @@
 One colored line above the Claude Code prompt. It shows how full your context is, how much of your plan limits you've used, and how far your task list has got. It also has buttons for the things you'd otherwise type a command for.
 
 ```
-󰧑 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬  62.7k 31% | 󰅐 5h 4h55m 12% | 󰃭 7d 3d22h 40% | effort high | 󰚩 Opus 5.5 | 󰒊 handoff | artifact on | 󰝖 main ▬▬▬▬▬▬ 3/5
+󰧑 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬  62.7k 31% | 󰅐 5h 4h55m 12% | 󰃭 7d 3d22h 40% | effort high | 󰚩 Opus 5.5 | artifact on | 󰝖 main ▬▬▬▬▬▬ 3/5
 ```
 
 ## Why use it
@@ -22,8 +22,13 @@ Each toggle can be switched off on its own (see [Settings](#settings)), because 
 | --- | --- | --- |
 | `effort high` / `effort medium` | Switch between high and medium effort. | Medium is faster and uses fewer tokens, and it's plenty for small edits and quick questions. Save high for hard problems. The choice goes into `settings.json` too, so the toolbar and Claude Code always agree. |
 | ` Opus` / ` Sonnet` | Switch between Opus and Sonnet. | Sonnet is cheaper and quicker for simple jobs, and Opus is better for hard ones. Switching is the same as picking a model in `/model`. |
-| ` handoff` | Write a handoff note, clear the chat, and start fresh with that note. | When the context bar turns red, you want a clean chat without losing your place. One click writes down where you are, runs `/clear`, and hands the note to the new chat. Needs the `handoff` skill from [mattpocock/skills](https://github.com/mattpocock/skills). |
 | `artifact on` / `artifact off` | Turn Claude Code's Artifact tools on or off. | The Artifact tools add about 6–7k tokens to every chat, whether you use them or not. If you never make artifacts, turn them off and get that room back. Restart Claude Code for the change to take effect. |
+
+## Click the context bar to hand off
+
+When the context bar turns red, you want a clean chat without losing your place. Click the bar. It writes a handoff note about where you are, runs `/clear`, and gives the note to the new chat. While that runs, the bar turns blue and the brain icon becomes a paper plane, so you can see it's working.
+
+This needs the `handoff` skill from [mattpocock/skills](https://github.com/mattpocock/skills). If you don't use it, turn `ctxHandoff` off and the bar won't respond to clicks.
 
 ## Install
 
@@ -36,7 +41,7 @@ You need:
 
 - A Claude Code version with mods (function-hook plugins).
 - A [Nerd Font](https://www.nerdfonts.com/) in your terminal for the icons. Ghostty has one built in.
-- For the handoff button: `/plugin marketplace add mattpocock/skills`, then install `mattpocock-skills`. You can also hide the button.
+- For the handoff click: `/plugin marketplace add mattpocock/skills`, then install `mattpocock-skills`. You can also turn it off.
 
 ## Settings
 
@@ -46,7 +51,7 @@ Open `/config` and find **code-toolbar**. The same options also live in `~/.clau
 | --- | --- | --- |
 | `showEffort` | on | Show the effort toggle. When it's off, Claude Code's own effort setting is used and nothing overrides it. |
 | `showModel` | on | Show the model toggle. |
-| `showHandoff` | on | Show the handoff button. |
+| `ctxHandoff` | on | Click the context bar to hand off. |
 | `showArtifact` | on | Show the artifact toggle. |
 | `ctxTarget` | 200000 | The token count where the context bar is full. The % is measured against it. |
 | `ctxCaution` | 150000 | The bar turns orange at this many tokens. |

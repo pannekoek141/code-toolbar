@@ -13,6 +13,8 @@ const tasks = atom({ plugin: 'code-toolbar', key: 'tasks' } as const, {})
 const alerted = atom({ plugin: 'code-toolbar', key: 'alerted' } as const, { ctx: false, five: false })
 // Whether the > menu is open.
 const more = atom({ plugin: 'code-toolbar', key: 'more' } as const, false)
+// A handoff is running: the context bar shows it in blue.
+const handing = atom({ plugin: 'code-toolbar', key: 'handing' } as const, false)
 
 // Aussie palette, flatuicolors.com/palette/au
 const GREEN = '#6ab04c' // Pure Apple
@@ -69,7 +71,7 @@ export function configFrom(options: Readonly<Record<string, unknown>>): Config {
     five: isOn('five'),
     week: isOn('week'),
     // Which toggles the bar shows, by toggle key.
-    show: { effort: isOn('showEffort'), model: isOn('showModel'), handoff: isOn('showHandoff'), artifact: isOn('showArtifact') },
+    show: { effort: isOn('showEffort'), model: isOn('showModel'), handoff: isOn('ctxHandoff'), artifact: isOn('showArtifact') },
   }
 }
 
@@ -258,6 +260,7 @@ let pendingHandoff: string | null = null
 async function startHandoff($: EngineInterface) {
   const dir = ((await $.env.get('TMPDIR')) ?? '/tmp').replace(/\/$/, '')
   pendingHandoff = `${dir}/handoff-${await $.clock.now()}.md`
+  await update($, handing, () => true)
   $.ui.toast('Handoff: writing the note, then starting fresh')
   void $.command.run({ command: 'mattpocock-skills:handoff', args: `Save the document to exactly ${pendingHandoff}` })
 }
@@ -265,6 +268,7 @@ async function startHandoff($: EngineInterface) {
 async function finishHandoff($: EngineInterface) {
   const path = pendingHandoff
   pendingHandoff = null
+  await update($, handing, () => false)
   if (!path || !(await $.fs.exists(path))) {
     $.ui.toast('Handoff note not found; nothing cleared')
     return
@@ -320,7 +324,10 @@ export const register: Register = (on, options) => {
     const res = await next(e)
     if (pendingHandoff && !e.agentId) {
       if (e.reason === 'answer') void finishHandoff($).catch(err => $.ui.toast(`Handoff stopped: ${err}`))
-      else pendingHandoff = null
+      else {
+        pendingHandoff = null
+        await update($, handing, () => false)
+      }
     }
     return res
   })
@@ -332,9 +339,8 @@ export const register: Register = (on, options) => {
     else if (e.element === 'effort') await toggle($)
     else if (e.element === 'more') await update($, more, v => !v)
     else if (e.element === 'artifact') await toggleArtifact($)
-    else if (e.element === 'handoff') {
-      await update($, more, () => false)
-      await startHandoff($)
+    else if (e.element === 'ctx') {
+      if (cfg.show.handoff && !pendingHandoff) await startHandoff($)
     }
     else return next(e)
     return {}
@@ -356,6 +362,7 @@ export const register: Register = (on, options) => {
     const sep = <Text dimColor>|</Text>
     const level = await read($, effort)
     const isOpen = await read($, more)
+    const isHanding = await read($, handing)
 
     const track = (color: string, n: number) => <Text color={shade(color, s.isLight)}>{'▬'.repeat(n)}</Text>
 
@@ -420,22 +427,45 @@ export const register: Register = (on, options) => {
       }
     }
 
-    const ctxText = `${ICON.ctx} ${cfg.ctxBar ? `${'▬'.repeat(cfg.ctxCells)}  ${fmtTokens(ctx)}` : `ctx ${fmtTokens(ctx)}`} ${ctxPct}%`
+    // The context bar is the handoff button: blue with the send icon while one runs.
+    const ctxColor = isHanding ? BLUE : colorFor(ctx, cfg)
+    const filled = Math.max(0, Math.min(cfg.ctxCells, Math.round((ctx / cfg.target) * cfg.ctxCells))) || 0
+    const ctxParts = [
+      { text: ` ${isHanding ? ICON.handoff : ICON.ctx} `, color: ctxColor },
+      ...(cfg.ctxBar
+        ? [
+            { text: '▬'.repeat(filled), color: ctxColor },
+            { text: '▬'.repeat(cfg.ctxCells - filled), color: shade(ctxColor, s.isLight) },
+            { text: `  ${fmtTokens(ctx)}`, color: ctxColor },
+          ]
+        : [{ text: `ctx ${fmtTokens(ctx)}`, color: ctxColor }]),
+      { text: ` ${ctxPct}% `, dim: true },
+    ]
+    const ctxText = ctxParts.map(p => p.text).join('')
     const fixed = [
       {
-        width: cells(ctxText) + 2,
+        width: cells(ctxText),
         node: piece(
           'ctx',
           true,
-          <Text>
-            <Text color={colorFor(ctx, cfg)}>{ICON.ctx} </Text>
-            {cfg.ctxBar ? (
-              bar(cfg.ctxCells, ctx / cfg.target, colorFor(ctx, cfg), fmtTokens(ctx))
-            ) : (
-              <Text color={colorFor(ctx, cfg)}>ctx {fmtTokens(ctx)}</Text>
-            )}
-            <Text dimColor> {ctxPct}%</Text>
-          </Text>,
+          cfg.show.handoff ? (
+            <Client
+              key="ctx"
+              module="./pill.ts"
+              props={{ color: ctxColor, parts: ctxParts }}
+              width={cells(ctxText)}
+              height={1}
+            />
+          ) : (
+            <Text>
+              {ctxParts.map((p, i) => (
+                <Text key={String(i)} color={p.color} dimColor={p.dim}>
+                  {p.text}
+                </Text>
+              ))}
+            </Text>
+          ),
+          true,
         ),
       },
       cfg.five ? limit('five', ICON.five, '5h', s.fivePct, s.fiveReset) : null,
@@ -447,7 +477,6 @@ export const register: Register = (on, options) => {
     const toggles = [
       { key: 'effort', label: `effort ${level}`, color: effortColor(level) },
       { key: 'model', label: `${ICON.model} ${fmtModel(s.model)}`, color: modelColor(s.model) },
-      { key: 'handoff', label: `${ICON.handoff} handoff`, color: BLUE },
       { key: 'artifact', label: `artifact ${s.artifact ? 'on' : 'off'}`, color: s.artifact ? GREEN : undefined },
     ].filter(t => cfg.show[t.key])
     const budget = e.props.bodyColumns - 1 // paddingLeft
