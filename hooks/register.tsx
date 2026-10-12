@@ -452,7 +452,7 @@ export const register: Register = (on, options) => {
             <Client
               key="ctx"
               module="./pill.ts"
-              props={{ color: ctxColor, parts: ctxParts }}
+              props={{ color: ctxColor, parts: ctxParts, hoverIcon: ICON.handoff, fly: !isHanding }}
               width={cells(ctxText)}
               height={1}
             />

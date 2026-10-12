@@ -26,7 +26,7 @@ Each toggle can be switched off on its own (see [Settings](#settings)), because 
 
 ## Click the context bar to hand off
 
-When the context bar turns red, you want a clean chat without losing your place. Click the bar. It writes a handoff note about where you are, runs `/clear`, and gives the note to the new chat. While that runs, the bar turns blue and the brain icon becomes a paper plane, so you can see it's working.
+When the context bar turns red, you want a clean chat without losing your place. Hover and the brain turns into a paper plane. Click, and the plane flies off to the right. Then it writes a handoff note about where you are, runs `/clear`, and gives the note to the new chat. While that runs, the bar turns blue and the brain icon becomes a paper plane, so you can see it's working.
 
 This needs the `handoff` skill from [mattpocock/skills](https://github.com/mattpocock/skills). If you don't use it, turn `ctxHandoff` off and the bar won't respond to clicks.
 
