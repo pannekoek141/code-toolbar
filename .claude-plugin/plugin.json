@@ -1,0 +1,91 @@
+{
+  "name": "code-toolbar",
+  "version": "0.2.0",
+  "description": "One colored bar above the prompt: context, limits, tasks, and toggles you pick",
+  "author": {
+    "name": "pannekoek141"
+  },
+  "repository": "https://github.com/pannekoek141/code-toolbar",
+  "license": "MIT",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "ctxTarget": {
+      "type": "number",
+      "title": "Context target (tokens)",
+      "description": "The context bar is full here; the % is measured against it",
+      "default": 200000
+    },
+    "ctxBar": {
+      "type": "boolean",
+      "title": "Context bar",
+      "description": "Draw the context as a bar; off shows the compact 'ctx 62.7k' label",
+      "default": true
+    },
+    "ctxBarCells": {
+      "type": "number",
+      "title": "Context bar width (cells)",
+      "description": "1 to 60",
+      "default": 15
+    },
+    "ctxCaution": {
+      "type": "number",
+      "title": "Caution at (tokens)",
+      "description": "Orange at or above this many tokens",
+      "default": 150000
+    },
+    "ctxWarn": {
+      "type": "number",
+      "title": "Warn at (tokens)",
+      "description": "Red at or above this many tokens",
+      "default": 170000
+    },
+    "taskBarCells": {
+      "type": "number",
+      "title": "Task bar width (cells)",
+      "description": "Width of each blue task progress bar, 1 to 60",
+      "default": 18
+    },
+    "five": {
+      "type": "boolean",
+      "title": "5-hour limit",
+      "description": "Show the 5-hour limit: time until reset and % used",
+      "default": true
+    },
+    "week": {
+      "type": "boolean",
+      "title": "7-day limit",
+      "description": "Show the weekly limit: time until reset and % used",
+      "default": true
+    },
+    "alerts": {
+      "type": "boolean",
+      "title": "Warning toasts",
+      "description": "Pop up once when the context passes Warn, or the 5h limit passes 85%",
+      "default": true
+    },
+    "showEffort": {
+      "type": "boolean",
+      "title": "Effort toggle",
+      "description": "Show the effort toggle (high / medium)",
+      "default": true
+    },
+    "showModel": {
+      "type": "boolean",
+      "title": "Model toggle",
+      "description": "Show the model toggle (Opus / Sonnet)",
+      "default": true
+    },
+    "showHandoff": {
+      "type": "boolean",
+      "title": "Handoff toggle",
+      "description": "Show the one-click handoff button (needs the mattpocock-skills handoff skill)",
+      "default": true
+    },
+    "showArtifact": {
+      "type": "boolean",
+      "title": "Artifact toggle",
+      "description": "Show the artifact on/off toggle",
+      "default": true
+    }
+  }
+}

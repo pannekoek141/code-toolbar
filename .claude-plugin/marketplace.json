@@ -1,0 +1,16 @@
+{
+  "name": "code-toolbar",
+  "owner": {
+    "name": "pannekoek141"
+  },
+  "metadata": {
+    "description": "code-toolbar: one bar above the Claude Code prompt"
+  },
+  "plugins": [
+    {
+      "name": "code-toolbar",
+      "source": "./",
+      "description": "One colored bar above the prompt: context, limits, tasks, and toggles you pick"
+    }
+  ]
+}
