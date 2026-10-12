@@ -431,7 +431,8 @@ export const register: Register = (on, options) => {
     const ctxColor = isHanding ? BLUE : colorFor(ctx, cfg)
     const filled = Math.max(0, Math.min(cfg.ctxCells, Math.round((ctx / cfg.target) * cfg.ctxCells))) || 0
     const ctxParts = [
-      { text: ` ${isHanding ? ICON.handoff : ICON.ctx} `, color: ctxColor },
+      // At the target the brain becomes the send icon too: a hint that it's time to hand off.
+      { text: ` ${isHanding || ctx >= cfg.target ? ICON.handoff : ICON.ctx} `, color: ctxColor },
       ...(cfg.ctxBar
         ? [
             { text: '▬'.repeat(filled), color: ctxColor },

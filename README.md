@@ -28,6 +28,8 @@ Each toggle can be switched off on its own (see [Settings](#settings)), because 
 
 When the context bar turns red, you want a clean chat without losing your place. Hover and the brain turns into a paper plane. Click, and the plane flies off to the right. Then it writes a handoff note about where you are, runs `/clear`, and gives the note to the new chat. While that runs, the bar turns blue and the brain icon becomes a paper plane, so you can see it's working.
 
+Why put it on the bar? The handoff is always one click away, in the spot you already look at to see how full the chat is. You don't have to remember a command, so it's easy to do it at the right time. And when the context reaches `ctxTarget` (200k by default), the brain turns into the plane by itself. That's your hint: time to hand off.
+
 This needs the `handoff` skill from [mattpocock/skills](https://github.com/mattpocock/skills). If you don't use it, turn `ctxHandoff` off and the bar won't respond to clicks.
 
 ## Install
