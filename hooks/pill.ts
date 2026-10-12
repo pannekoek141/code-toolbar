@@ -5,9 +5,9 @@ export type Part = { text: string; color?: string; dim?: boolean }
 // `hoverIcon` takes the icon's cell (cell 1) under the pointer; `fly` sends that icon off to the right on a click.
 export type PillProps = { label?: string; color: string | null; parts?: Part[]; hoverIcon?: string; fly?: boolean }
 
-// The flight: FRAMES frames, FRAME_MS apart (0.5s in all).
+// The flight: FRAMES frames, FRAME_MS apart (0.9s in all).
 const FRAMES = 20
-const FRAME_MS = 25
+const FRAME_MS = 45
 
 // A toggle drawn on the terminal's side: its label in its color at rest, a block of
 // that color with the label reversed under the pointer, and a click posted to the
