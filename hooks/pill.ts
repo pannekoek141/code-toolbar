@@ -12,14 +12,11 @@ const FRAME_MS = 45
 // A toggle drawn on the terminal's side: its label in its color at rest, a block of
 // that color with the label reversed under the pointer, and a click posted to the
 // hooks module. A Button can do the click, but not keep a color of its own.
-/** Frame `t` of the flight: the icon leaves cell 1 and slides right, gone after the last cell. */
+/** Frame `t` of the flight: the icon slides right from cell 1 over an empty block, so nothing hides it. */
 export function flyFrame(label: string, t: number): string {
   const cells = Array.from(label)
   const x = 1 + Math.round((t / FRAMES) * (cells.length - 2))
-  const icon = cells[1] ?? ''
-  cells[1] = ' '
-  if (x < cells.length) cells[x] = icon
-  return cells.join('')
+  return cells.map((_, i) => (i === x ? (cells[1] ?? '') : ' ')).join('')
 }
 
 // Each instance's latest props: the pointer listener is set once, so it would see stale ones.

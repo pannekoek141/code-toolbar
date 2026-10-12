@@ -97,7 +97,7 @@ test('toggles move behind the arrow one by one as the row narrows', () => {
 
 test('the send icon flies right across the label', async () => {
   const { flyFrame } = await import('../hooks/pill')
-  expect(flyFrame(' P ab ', 0)).toBe(' P ab ')
-  expect(flyFrame(' P ab ', 10)).toBe('   Pb ')
-  expect(flyFrame(' P ab ', 20)).toBe('   abP')
+  expect(flyFrame(' P ab ', 0)).toBe(' P    ')
+  expect(flyFrame(' P ab ', 10)).toBe('   P  ')
+  expect(flyFrame(' P ab ', 20)).toBe('     P')
 })
